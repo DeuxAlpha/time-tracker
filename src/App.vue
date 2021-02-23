@@ -1,27 +1,33 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div class="flex flex-col items-start mx-8 my-2">
+    <div class="mb-4">
+      <button v-if="!tracking" class="bg-blue-400 text-white hover:shadow hover:bg-blue-300 py-2 px-4">
+        Start
+      </button>
+      <button v-else class="bg-yellow-400 text-white hover:shadow hover:bg-yellow-300 py-2 px-4">
+        Stop
+      </button>
+    </div>
+
+
+  </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+import {defineComponent, ref} from 'vue';
 
 export default defineComponent({
   name: 'App',
-  components: {
-    HelloWorld
+  components: {},
+  setup() {
+    const tracking = ref(false);
+
+    return {
+      tracking
+    }
   }
 });
 </script>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
