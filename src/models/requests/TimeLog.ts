@@ -1,5 +1,5 @@
 export type TimeLog = {
-  timestamp: Date;
+  timestamp: string;
   name: string;
   notes: string;
   durationInSeconds: number;

@@ -38,18 +38,27 @@ export class TimeTrackingService {
   }
 
   private static getElapsedTime(): ElapsedTime {
-    const sec = this.ElapsedTime;
-    let hours = Math.floor(sec / 3600);
-    let minutes = Math.floor((sec - (hours * 3600)) / 60);
-    let seconds = sec - (hours * 3600) - (minutes * 60);
-    // add 0 if value < 10; Example: 2 => 02
-    return {
-      allSeconds: this.ElapsedTime,
-      hours,
-      minutes,
-      seconds
-    }
+    return getElapsedTime(this.ElapsedTime);
   }
+}
+
+export function getElapsedTime(timeInSeconds: number): ElapsedTime {
+  const sec = timeInSeconds;
+  let hours = Math.floor(sec / 3600);
+  let minutes = Math.floor((sec - (hours * 3600)) / 60);
+  let seconds = sec - (hours * 3600) - (minutes * 60);
+  // add 0 if value < 10; Example: 2 => 02
+  return {
+    allSeconds: timeInSeconds,
+    hours,
+    minutes,
+    seconds
+  }
+}
+
+export function prependZero(number: number): string {
+  if (number <= 9) return "0" + number;
+  return number.toString();
 }
 
 export type ElapsedTime = {

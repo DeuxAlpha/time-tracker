@@ -26,15 +26,20 @@
       <textarea class="border w-80 h-24" id="notes" v-model="notes"></textarea>
     </div>
   </div>
+  <TimeLogHistory :time-logs="timeLogs.items"/>
 </template>
 
 <script lang="ts">
 import {defineComponent, onUnmounted, Ref, ref} from 'vue';
-import {ElapsedTime, TimeTrackingService} from "@/services/TimeTrackingService";
-import {SaveTimeLog} from "@/api/TimeApi";
+import {ElapsedTime, prependZero, TimeTrackingService} from "@/services/TimeTrackingService";
+import {GetTimeLogs, SaveTimeLog} from "@/api/TimeApi";
+import TimeLogHistory from "@/components/TimeLogHistory.vue";
+import {TimeLog} from "@/models/requests/TimeLog";
+import {QueryResponse} from "@/models/query/QueryResponse";
 
 export default defineComponent({
   name: 'TimeTracker',
+  components: {TimeLogHistory},
   async setup() {
     const tracking = ref(TimeTrackingService.Tracking);
     const elapsedTime = ref(null) as Ref<null | ElapsedTime>;
@@ -50,14 +55,18 @@ export default defineComponent({
 
     async function onStopTracking() {
       if (!name) return;
-      await SaveTimeLog({
+      let timeLog = {
         durationInSeconds: TimeTrackingService.ElapsedTime,
         name: name.value,
         notes: notes.value,
         timestamp: timestamp.value
-      });
+      } as TimeLog;
+      await SaveTimeLog(timeLog);
       TimeTrackingService.StopTimeTracking();
       tracking.value = TimeTrackingService.Tracking;
+      name.value = '';
+      notes.value = '';
+      timeLogs.value.items.push(timeLog)
     }
 
     TimeTrackingService.OnTickEvent.subscribe(updateTime);
@@ -70,10 +79,14 @@ export default defineComponent({
       elapsedTime.value = time;
     }
 
-    function prependZero(number: number): string {
-      if (number < 9) return "0" + number;
-      return number.toString();
-    }
+    const timeLogs = ref(await GetTimeLogs({
+      items: 1000,
+      page: 1,
+      sorters: [{
+        propertyName: 'Timestamp',
+        sortDirection: 'Descending'
+      }]
+    })) as Ref<QueryResponse<TimeLog>>;
 
     return {
       tracking,
@@ -83,6 +96,7 @@ export default defineComponent({
       name,
       notes,
       prependZero,
+      timeLogs
     }
   }
 })
