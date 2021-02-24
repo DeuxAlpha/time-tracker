@@ -14,7 +14,9 @@
   },
   "main": "background.js",
   "dependencies": {
+    "axios": "0.21.1",
     "core-js": "^3.6.5",
+    "strongly-typed-events": "2.0.9",
     "vue": "^3.0.0"
   },
   "devDependencies": {
