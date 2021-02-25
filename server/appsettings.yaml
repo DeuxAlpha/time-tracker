@@ -1,0 +1,2 @@
+﻿ConnectionStrings:
+  TimeLog:Dev: Server=localhost,20401;Database=timelog_db;User Id=sa;Password=Your_password123

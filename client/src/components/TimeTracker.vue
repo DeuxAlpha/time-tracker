@@ -66,7 +66,7 @@ export default defineComponent({
       tracking.value = TimeTrackingService.Tracking;
       name.value = '';
       notes.value = '';
-      timeLogs.value.items.push(timeLog)
+      timeLogs.value.items.unshift(timeLog)
     }
 
     TimeTrackingService.OnTickEvent.subscribe(updateTime);
